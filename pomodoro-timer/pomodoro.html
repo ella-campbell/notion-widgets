@@ -1,11 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: rgb(55, 53, 47);
+        }
+
+        #time {
+            font-family: "Karla", sans-serif;
+            font-size: 10.375rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -5px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border-radius: 50px;
+            border: 1px solid black;
+            color: black;
+            font-family: "Rubik", sans-serif;
+            font-size: 1rem;
+            margin: 0.313rem;
+            padding: 0.313rem 0.5rem;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
+
 <body>
-    <h1>Hello notion!</h1>
+    <div>
+        <div class="btn-container">
+            <button class="btn" id="button-break" onclick="setMode('short')">Short Break</button>
+            <button class="btn" id="button-focus" onclick="setMode('focus')">Focus</button>
+            <button class="btn" id="button-break-long" onclick="setMode('long')">Long Break</button>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 50px">
+            <div id="time">25:00</div>
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="button-start-stop" onclick="startStopTimer()">Start</button>
+            <button class="btn material-symbols-outlined" id="button-reload" onclick="resetTimer()">
+                restart_alt
+            </button>
+            <button class="btn material-symbols-outlined" id="button-settings" onclick="alert('This is a WIP.')">
+                settings
+            </button>
+        </div>
+    </div>
 </body>
+
+<script>
+    const timeElement = document.getElementById('time');
+    const breakButton = document.getElementById("button-break");
+    const focusButton = document.getElementById('button-focus');
+    const breakLongButton = document.getElementById('button-break-long');
+    const startStopButton = document.getElementById('button-start-stop');
+    const realoadButton = document.getElementById('button-reaload');
+    const settingsButton = document.getElementById('button-settings');
+
+    let timerValue = 25 * 60;
+    let isRunning = false;
+    let currentMode = 'focus';
+
+    const showTime = () => {
+        minutes = Math.floor(timerValue / 60);
+        seconds = timerValue - (minutes * 60);
+        timeElement.innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const updateTick = () => {
+        if (isRunning && timerValue > 0) {
+            timerValue = timerValue - 1;
+            showTime();
+            setTimeout(updateTick, 1000);
+        }
+    };
+
+    const setMode = (mode) => {
+        currentMode = mode;
+        if (currentMode == "short") {
+            setTimer(5);
+        } else if (currentMode == "long") {
+            setTimer(10);
+        } else if (currentMode == "focus") {
+            setTimer(25);
+        }
+    };
+
+    const setTimer = (minutes) => {
+        timerValue = minutes * 60;
+        showTime();
+    };
+
+    const startStopTimer = () => {
+        if (isRunning) {
+            isRunning = false;
+            startStopButton.innerText = "Start";
+        } else {
+            isRunning = true;
+            startStopButton.innerText = "Stop";
+            updateTick();
+        }
+    };
+
+    const resetTimer = () => {
+        startStopTimer();
+        setMode(currentMode);
+    }
+
+</script>
+
 </html>
